@@ -1,27 +1,10 @@
-let video1 = document.getElementById('video1');
-let video2 = document.getElementById('video2');
-let video3 = document.getElementById('video3');
-let video4 = document.getElementById('video4');
-let video5 = document.getElementById('video5');
-let video6A = document.getElementById('video6A');
-let video6B = document.getElementById('video6B');
-let video7 = document.getElementById('video7');
-let video8 = document.getElementById('video8');
-let video9A = document.getElementById('video9A');
-let video9B = document.getElementById('video9B');
-let video10A = document.getElementById('video10A');
-let video10B = document.getElementById('video10B');
-let video11A = document.getElementById('video11A');
-let video11B = document.getElementById('video11B');
-let video12 = document.getElementById('video12');
-let video13 = document.getElementById('video13');
+let videoPlayer1 = document.getElementById('videoPlayer1');
+let videoPlayer2 = document.getElementById('videoPlayer2');
 
-
-let allVideo=[video1,video2, video3,video4,video5,video6A, video6B,video7,video8,video9A,video9B,video10A,video10B,video11A,video11B,video12,video13];
 
 let controls = document.querySelectorAll('.control')
 
-let gyro = document.querySelector('.gyroCont');
+let video1Control = document.querySelector('.video1');
 
 
 let interacted = false,
@@ -31,129 +14,138 @@ let interacted = false,
     playedVideo7 = false;
 
 
-video1.addEventListener('click', unmuteVideo1);
+video1Control.classList.remove('hidden');
+video1Control.addEventListener('click', unmuteVideo1);
+
 
 function unmuteVideo1() {
-    video1.muted = false;
-    video1.removeEventListener('click', unmuteVideo1);
+    video1Control.removeEventListener('click', unmuteVideo1);
 
-    currentVideo = video1;
-    nextVideo = video2;
+    let current = document.querySelector('.playing');
+    current.muted = false;
 
-    video1.addEventListener('click', playVideo2);
+    currentVideo = '1';
+    nextVideo = '2';
+
+    video1Control.classList.remove('hidden');
+    video1Control.addEventListener('click', playVideo2);
 }
 
-
 function playVideo1() {
-    //
-    // allVideo.forEach(vid=>{
-    //     console.log(vid.id, getEventListeners(vid))
-    // })
 
-
-    currentVideo.removeEventListener('ended', playVideo1);
-    // console.log('playing video 1');
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playVideo1);
 
     playedVideo7 = false;
 
-    hideVideo(currentVideo);
-    playVideo(video1);
+
+    currentVideo = '1'; //video to play
+    nextVideo = '2'; // video to load
+    playVideo(true);
 
 
-    currentVideo = video1;
-    nextVideo = video2;
+    current = document.querySelector('.playing');
+    current.loop = true;
 
-    currentVideo.loop = true;
 
-    video1.addEventListener('click', playVideo2);
+    video1Control.classList.remove('hidden');
+    video1Control.addEventListener('click', playVideo2);
 }
 
 
 function playVideo2() {
-    video1.removeEventListener('click', playVideo2);
+    video1Control.removeEventListener('click', playVideo2);
+    video1Control.classList.add('hidden');
 
+    let current = document.querySelector('.playing');
+    current.autoplay = false;
+    current.loop = false;
+    current.muted = false;
 
-    hideVideo(currentVideo);
-    playVideo(video2);
+    currentVideo = '2'; //video to play
+    nextVideo = '3'; // video to load
 
-    currentVideo = video2;
-    nextVideo = video3;
+    playVideo();
 
-    video2.addEventListener('ended', playVideo3);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', playVideo3);
 }
 
+
 function playVideo3() {
-    video2.removeEventListener('ended', playVideo3);
-    hideVideo(currentVideo);
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playVideo3);
 
+    currentVideo = '3';
+    nextVideo = '4';
 
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
+    playVideo();
 
-    currentVideo = video3;
-    nextVideo = video4;
-
-    video3.addEventListener('ended', playVideo4);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', playVideo4);
 }
 
 
 function playVideo4() {
-    video3.removeEventListener('ended', playVideo4);
+
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playVideo4);
 
 
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
+    currentVideo = '4';
+    nextVideo = '5';
 
-
-    currentVideo = video4;
-    nextVideo = video5;
+    playVideo();
 
 
     let controlToShow = document.querySelector('.video4');
     controlToShow.classList.remove('hidden');
 
-    handleSwipe(controlToShow, currentVideo, swiped);
+    // handleSwipe(controlToShow, currentVideo, swiped);
 
     if (!controlToShow.onclick) {
-        controlToShow.onclick=clickedGyro; //click on 'gyro'
-    }else {
-        controlToShow.onclick=null; //click on 'gyro'
-        controlToShow.onclick=clickedGyro; //click on 'gyro'
+        controlToShow.onclick = clickedGyro; //click on 'gyro'
+        // console.log('click added')
+    } else {
+        controlToShow.onclick = null; //click on 'gyro'
+        controlToShow.onclick = clickedGyro; //click on 'gyro'
     }
 
 
-    currentVideo.addEventListener('ended', repeatVideo);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', repeatVideo);
 
 }
 
 
 function playVideo5() {
 
-    // if (playedVideo7) {
-        currentVideo.removeEventListener('ended', playVideo5);
-    // }
+    let current = document.querySelector('.playing');
+
+    if (playedVideo7) {
+        current.removeEventListener('ended', playVideo5);
+    }
 
 
-    // console.log('video 5 playing')
+    currentVideo = '5';
+    nextVideo = '6A';
 
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
-
-
-    currentVideo = video5;
-    nextVideo = video6A;
+    playVideo();
 
 
-    currentVideo.addEventListener('ended', repeatVideo);
 
-    let control = document.querySelector('.' + currentVideo.id);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', repeatVideo);
 
-    if(!control.ontouchend) {
-        handleSwipe(control, currentVideo, swiped);
-    }else {
-        control.ontouchend=null;
-        control.ontouchstart=null;
-        handleSwipe(control, currentVideo, swiped);
+
+    let control = document.querySelector('.video5');
+    control.classList.remove('hidden');
+    if (!control.ontouchend) {
+        handleSwipe(control, current, swiped);
+    } else {
+        control.ontouchend = null;
+        control.ontouchstart = null;
+        handleSwipe(control, current, swiped);
     }
 
 
@@ -162,43 +154,46 @@ function playVideo5() {
 
 function playVideo6() {
 
+    let current = document.querySelector('.playing');
 
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
-
-
-    currentVideo = nextVideo;//video6A or video6B
-    nextVideo = video7;
-
+    currentVideo = nextVideo;
 
     if (!playedVideo7) {
-        playedVideo7 = true;
-        nextVideo = video7;
-        currentVideo.addEventListener('ended', playVideo7);
+        nextVideo = '7';
     } else {
-        nextVideo = video8;
-        currentVideo.addEventListener('ended', playVideo8);
+        nextVideo = '8';
     }
 
+    // console.log('playing 6');
+    playVideo();
+
+
+    current = document.querySelector('.playing');
+    if (!playedVideo7) {
+        playedVideo7 = true;
+        current.addEventListener('ended', playVideo7);
+    } else {
+        current.addEventListener('ended', playVideo8);
+    }
 
 }
 
 
 function playVideo7() {
-    //remove event listener
-    currentVideo.removeEventListener('ended', playVideo7);
+
+    let current = document.querySelector('.playing');
+
+    current.removeEventListener('ended', playVideo7);
 
 
-    hideVideo(currentVideo); //video 6
-    playVideo(nextVideo); // video 7
 
-
-    currentVideo = nextVideo; // video 7
-    nextVideo = video5;
-
+    currentVideo = '7';
+    nextVideo = '5';
+    playVideo();
 
     //go to video 5
-    currentVideo.addEventListener('ended', playVideo5);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', playVideo5);
 
 
 }
@@ -206,248 +201,243 @@ function playVideo7() {
 
 function playVideo8() {
 
-    // console.log('video 8')
-
-    //remove event listener
-    currentVideo.removeEventListener('ended', playVideo8);
-
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playVideo8);
 
 
-    currentVideo = nextVideo;
-    nextVideo = video9A;
+    currentVideo = '8';
+    nextVideo = '9B';
 
+    playVideo();
 
-    currentVideo.addEventListener('ended', repeatVideo);
-    let control = document.querySelector('.' + currentVideo.id);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', repeatVideo);
 
-    if(!control.ontouchend) {
-        handleSwipe(control, currentVideo, swiped);
-    }else {
-        control.ontouchend=null;
-        control.ontouchstart=null;
-        handleSwipe(control, currentVideo, swiped);
+    let control = document.querySelector('.video8');
+    control.classList.remove('hidden');
+    if (!control.ontouchend) {
+        handleSwipe(control, current, swiped);
+    } else {
+        control.ontouchend = null;
+        control.ontouchstart = null;
+        handleSwipe(control, current, swiped);
     }
 }
 
 
 function playVideo9() {
-    // console.log('video 9')
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playVideo8);
+
+    currentVideo = nextVideo;
 
 
-    hideVideo(currentVideo);
-    playVideo(nextVideo);
-
-
-    currentVideo = nextVideo;//video9A or video9B
-
-    if (currentVideo.id === 'video9A') {
-        nextVideo = video10A;
-    } else if (currentVideo.id === 'video9B') {
-        nextVideo = video10B;
+    if (currentVideo === '9A') {
+        nextVideo = '10A';
+    } else if (currentVideo === '9B') {
+        nextVideo = '10B';
     }
+    playVideo();
 
+
+
+    current = document.querySelector('.playing');
     //go to video 10
-    currentVideo.addEventListener('ended', playVideo10);
-
+    current.addEventListener('ended', playVideo10);
 
 }
-
-
-
-
 
 
 function playVideo10() {
-    // console.log('video 10')
+
+    let current = document.querySelector('.playing');
 
     //remove event listener
-    currentVideo.removeEventListener('ended', playVideo10);
+    current.removeEventListener('ended', playVideo10);
 
+    currentVideo = nextVideo;
 
-    hideVideo(currentVideo); //video 9
-    playVideo(nextVideo); // video 10A/B
-
-
-    currentVideo = nextVideo; // video 10
-
-    if (currentVideo.id === 'video10A') {
-        nextVideo = video11A;
-    } else if (currentVideo.id === 'video10B') {
-        nextVideo = video11B;
+    if (currentVideo === '10A') {
+        nextVideo = '11A';
+    } else if (currentVideo === '10B') {
+        nextVideo = '11B';
     }
 
-    console.log(currentVideo.id);
+    playVideo();
 
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', repeatVideo);
 
-    currentVideo.addEventListener('ended', repeatVideo);
-    let control = document.querySelector('.' + currentVideo.id);
-
-    if(!control.ontouchend) {
-        handleSwipe(control, currentVideo, swiped);
-    }else {
-        control.ontouchend=null;
-        control.ontouchstart=null;
-        handleSwipe(control, currentVideo, swiped);
+    let control = document.querySelector('.video10');
+    control.classList.remove('hidden');
+    if (!control.ontouchend) {
+        handleSwipe(control, current, swiped);
+    } else {
+        control.ontouchend = null;
+        control.ontouchstart = null;
+        handleSwipe(control, current, swiped);
     }
-
 
 
 }
-
 
 
 function playVideo11() {
 
 
-    hideVideo(currentVideo); //video 10
-    playVideo(nextVideo); // video 11A/B
+    let current = document.querySelector('.playing');
 
+    //remove event listener
+    current.removeEventListener('ended', playVideo10);
 
-    currentVideo = nextVideo; // video 11
+    currentVideo = nextVideo;
 
-    if (currentVideo.id === 'video11A') {
-        nextVideo = video12;
-    } else if (currentVideo.id === 'video11B') {
-        nextVideo = video13;
+    if (currentVideo === '11A') {
+        nextVideo = '12';
+    } else if (currentVideo === '11B') {
+        nextVideo = '13';
     }
 
+    playVideo();
 
-    currentVideo.addEventListener('ended', playLastVideo);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', playLastVideo);
 
 }
 
 
 function playLastVideo() {
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', playLastVideo);
 
-    currentVideo.removeEventListener('ended', playLastVideo);
-
-    hideVideo(currentVideo); //video 11
-    playVideo(nextVideo); // video 12/13
+    currentVideo = nextVideo;
+    nextVideo = '1';
 
 
-    currentVideo = nextVideo; // video 12/13
-    nextVideo = video1;
+    playVideo();
 
-    currentVideo.addEventListener('ended', playVideo1);
+    current = document.querySelector('.playing');
+    current.addEventListener('ended', playVideo1);
 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function swiped(type, video) {
 
-    // console.log(type, video.id);
+    // console.log(type, video.dataset.video);
 
-    if (video.id === 'video5') {
+    if (video.dataset.video === '5') {
         if (type === 'up') {
-            nextVideo = video6A;
+            nextVideo = '6A';
         } else if (type === 'down') {
-            nextVideo = video6B;
+            nextVideo = '6B';
+            reloadNextVideo();
         }
-        currentVideo.removeEventListener('ended', repeatVideo);
+        video.removeEventListener('ended', repeatVideo);
         playVideo6();
 
-    } else if (video.id === 'video8') {
-        // console.log('video8')
+    } else if (video.dataset.video === '8') {
         if (type === 'up') {
-            nextVideo = video9A;
+            nextVideo = '9A';
+            reloadNextVideo();
         } else if (type === 'down') {
-            nextVideo = video9B;
+            nextVideo = '9B';
         }
-        currentVideo.removeEventListener('ended', repeatVideo);
+        video.removeEventListener('ended', repeatVideo);
         playVideo9();
-    }else if (video.id === 'video10A') {
-
-        console.log(video.id,'swiped video10A, going to 11A')
-        nextVideo = video11A;
-        currentVideo.removeEventListener('ended', repeatVideo);
+    } else if (video.dataset.video  === '10A') {
+        nextVideo = '11A';
+        video.removeEventListener('ended', repeatVideo);
         playVideo11();
 
-    }else if (video.id === 'video10B'){
-        console.log(video.id,'swiped video10B, going to 11B')
+    } else if (video.dataset.video  === '10B') {
 
-        nextVideo = video11B;
-        currentVideo.removeEventListener('ended', repeatVideo);
+        nextVideo = '11B';
+        video.removeEventListener('ended', repeatVideo);
         playVideo11();
 
     }
-
 
 }
 
 
 function clickedGyro() {
-    currentVideo.removeEventListener('ended', repeatVideo);
+    let current = document.querySelector('.playing');
+    current.removeEventListener('ended', repeatVideo);
 
     // console.log('gyro clicked');
     interacted = false;
     loop = 0;
 
-    // hideVideo(currentVideo);
     playVideo5();
-
 }
 
 
-function hideShow(v1, v2) {
+function playVideo(reset = false) {
 
-    hideVideo(v1);
-    playVideo(v2);
+    let currentPlayingVideo = document.querySelector('.playing');
+    let videoToPlay = document.querySelector('.stopped');
+
+    //
+    // // setup with current playing video
+    // currentPlayingVideo.pause();
+    // currentPlayingVideo.currentTime = 0;
+    // // currentPlayingVideo.autoplay = false;
+    // // currentPlayingVideo.muted = false;
+    // // currentPlayingVideo.loop = false;
+    //
+    //
+    // //setup for video to play
+    if (reset) {
+        videoToPlay.setAttribute("src", "videos/" + currentVideo + ".mp4");
+        videoToPlay.load();
+    }
+
+    currentPlayingVideo.setAttribute("src", "");
+
+    currentPlayingVideo.classList.add('hidden');
+
+    videoToPlay.classList.remove('hidden');
+    videoToPlay.play();
+    videoToPlay.dataset.video = currentVideo;
+
+    currentPlayingVideo.classList.add('stopped');
+    currentPlayingVideo.classList.remove('playing');
+
+    videoToPlay.classList.remove('stopped');
+    videoToPlay.classList.add('playing');
 
 
-}
-
-
-function playVideo(video) {
-
-    video.classList.remove('hidden');
-    video.play();
+    //load next video
+    currentPlayingVideo.setAttribute("src", "videos/" + nextVideo + ".mp4");
+    currentPlayingVideo.load();
 
 
     controls.forEach(control => control.classList.add('hidden'));
-    let controlToShow = document.querySelector('.' + video.id);
-    if (controlToShow)
-        controlToShow.classList.remove('hidden');
 
-
-    document.title = video.id;
+    // document.title = 'video ' + currentVideo;
 }
 
 
 function repeatVideo() {
 
-    // console.log('above');
+    let current = document.querySelector('.playing');
 
-    currentVideo.removeEventListener('ended', repeatVideo);
+    current.removeEventListener('ended', repeatVideo);
 
     if (!interacted && loop < 2) { // play current video again
 
 
-        // console.log('repeating ' + currentVideo.id);
-
-        playVideo(currentVideo);
+        current.play();
         loop++;
-        currentVideo.addEventListener('ended', repeatVideo);
+        current.addEventListener('ended', repeatVideo);
 
 
     } else if (!interacted && loop > 1) { // back to home
         interacted = false;
         loop = 0;
 
-        currentVideo.removeEventListener('ended', repeatVideo);
+        current.removeEventListener('ended', repeatVideo);
         // console.log('go to 1 condition');
         playVideo1();
 
@@ -485,13 +475,16 @@ function handleSwipe(ele, currentVideo, fn) {
 }
 
 
-function hideVideo(video) {
-    video.pause();
-    video.autoplay = false;
-    video.loop = false;
-    video.currentTime=0;
-    video.classList.add('hidden');
+function reloadNextVideo() {
+    let stoppedVideo = document.querySelector('.stopped');
+    stoppedVideo.setAttribute("src", "");
+    stoppedVideo.setAttribute("src", "videos/" + nextVideo + ".mp4");
+    stoppedVideo.load();
+
 }
+
+
+
 
 function handleGesture(touchstartY, touchendY, currentVideo, fn) {
     // if (touchendX <= touchstartX) {
@@ -513,59 +506,10 @@ function handleGesture(touchstartY, touchendY, currentVideo, fn) {
         // return 'up';
         fn('up', currentVideo);
 
-    }
-
-    if (touchendY >= touchstartY) {
+    }else if (touchendY >= touchstartY) {
         // console.log('Swiped down');
         fn('down', currentVideo);
         // return 'down';
     }
 
 }
-
-
-function handleSwipeVideo(control, video) {
-
-    handleSwipe(control, video, swiped);
-
-}
-
-
-// let video = document.getElementById('video');
-// let currentVideo=1;
-//
-// window.onload = function (e) {
-//
-//     // console.log('hehe');
-//     video.addEventListener('click', firstClickHandler)
-//
-//
-// }
-//
-//
-// const firstClickHandler = () => {
-//     // console.dir('playing video 2');
-//     currentVideo++;
-//
-//     document.title='video '+currentVideo;
-//     video.src = 'videos/2.mp4';
-//     video.loop = false;
-//
-//     // video.addEventListener('ended', () => {
-//     //     currentVideo++;
-//     //     console.log('video'+currentVideo+' ended');
-//     //     video.src = 'videos/'+currentVideo+'.mp4';
-//     //     document.title='video '+currentVideo;
-//     //
-//     // });
-//
-//
-//     video.addEventListener('ended', () => {
-//         video.src = 'videos/3.mp4';
-//         document.title='video 3';
-//     });
-//
-//
-//
-//     video.removeEventListener('click',firstClickHandler);
-// }
